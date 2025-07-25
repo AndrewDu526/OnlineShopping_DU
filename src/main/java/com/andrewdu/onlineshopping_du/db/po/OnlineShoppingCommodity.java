@@ -1,5 +1,10 @@
 package com.andrewdu.onlineshopping_du.db.po;
 
+import lombok.Builder;
+import lombok.Data;
+
+@Builder
+@Data
 public class OnlineShoppingCommodity {
     private Long commodityId;
 

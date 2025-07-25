@@ -1,7 +1,10 @@
 package com.andrewdu.onlineshopping_du.db.po;
 
+import lombok.Builder;
+
 import java.util.Date;
 
+@Builder
 public class OnlineShoppingOrder {
     private Long orderId;
 
@@ -27,9 +30,7 @@ public class OnlineShoppingOrder {
         this.orderId = orderId;
     }
 
-    public String getOrderNo() {
-        return orderNo;
-    }
+    public String getOrderNo() {return orderNo;}
 
     public void setOrderNo(String orderNo) {
         this.orderNo = orderNo == null ? null : orderNo.trim();

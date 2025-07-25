@@ -27,16 +27,18 @@
     select <include refid="Base_Column_List" /> from online_shopping_commodity
   </select>
 
-  <select id="listCommoditiesByUserId" resultType="com.andrewdu.onlineshopping_du.db.po.OnlineShoppingCommodity">
+  <select id="listCommoditiesBySellerId" resultType="com.andrewdu.onlineshopping_du.db.po.OnlineShoppingCommodity">
     select <include refid="Base_Column_List" />
     from online_shopping_commodity
     where creator_user_id = #{userId,jdbcType=BIGINT}
   </select>
 
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from online_shopping_commodity
+  <select id="ListCommodityByCommodityId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from online_shopping_commodity
     where commodity_id = #{commodityId,jdbcType=BIGINT}
-  </delete>
+  </select>
 
   <insert id="insert" parameterType="com.andrewdu.onlineshopping_du.db.po.OnlineShoppingCommodity">
     insert into online_shopping_commodity (commodity_id, commodity_name, commodity_desc, price, available_stock, creator_user_id, total_stock, lock_stock)
@@ -45,89 +47,6 @@
       #{totalStock,jdbcType=INTEGER}, #{lockStock,jdbcType=INTEGER})
   </insert>
 
-  <insert id="insertSelective" parameterType="com.andrewdu.onlineshopping_du.db.po.OnlineShoppingCommodity">
-    insert into online_shopping_commodity
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="commodityId != null">
-        commodity_id,
-      </if>
-      <if test="commodityName != null">
-        commodity_name,
-      </if>
-      <if test="commodityDesc != null">
-        commodity_desc,
-      </if>
-      <if test="price != null">
-        price,
-      </if>
-      <if test="availableStock != null">
-        available_stock,
-      </if>
-      <if test="creatorUserId != null">
-        creator_user_id,
-      </if>
-      <if test="totalStock != null">
-        total_stock,
-      </if>
-      <if test="lockStock != null">
-        lock_stock,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="commodityId != null">
-        #{commodityId,jdbcType=BIGINT},
-      </if>
-      <if test="commodityName != null">
-        #{commodityName,jdbcType=VARCHAR},
-      </if>
-      <if test="commodityDesc != null">
-        #{commodityDesc,jdbcType=VARCHAR},
-      </if>
-      <if test="price != null">
-        #{price,jdbcType=INTEGER},
-      </if>
-      <if test="availableStock != null">
-        #{availableStock,jdbcType=INTEGER},
-      </if>
-      <if test="creatorUserId != null">
-        #{creatorUserId,jdbcType=BIGINT},
-      </if>
-      <if test="totalStock != null">
-        #{totalStock,jdbcType=INTEGER},
-      </if>
-      <if test="lockStock != null">
-        #{lockStock,jdbcType=INTEGER},
-      </if>
-    </trim>
-  </insert>
-
-  <update id="updateByPrimaryKeySelective" parameterType="com.andrewdu.onlineshopping_du.db.po.OnlineShoppingCommodity">
-    update online_shopping_commodity
-    <set>
-      <if test="commodityName != null">
-        commodity_name = #{commodityName,jdbcType=VARCHAR},
-      </if>
-      <if test="commodityDesc != null">
-        commodity_desc = #{commodityDesc,jdbcType=VARCHAR},
-      </if>
-      <if test="price != null">
-        price = #{price,jdbcType=INTEGER},
-      </if>
-      <if test="availableStock != null">
-        available_stock = #{availableStock,jdbcType=INTEGER},
-      </if>
-      <if test="creatorUserId != null">
-        creator_user_id = #{creatorUserId,jdbcType=BIGINT},
-      </if>
-      <if test="totalStock != null">
-        total_stock = #{totalStock,jdbcType=INTEGER},
-      </if>
-      <if test="lockStock != null">
-        lock_stock = #{lockStock,jdbcType=INTEGER},
-      </if>
-    </set>
-    where commodity_id = #{commodityId,jdbcType=BIGINT}
-  </update>
 
   <update id="updateByPrimaryKey" parameterType="com.andrewdu.onlineshopping_du.db.po.OnlineShoppingCommodity">
     update online_shopping_commodity
@@ -139,5 +58,13 @@
       total_stock = #{totalStock,jdbcType=INTEGER},
       lock_stock = #{lockStock,jdbcType=INTEGER}
     where commodity_id = #{commodityId,jdbcType=BIGINT}
+  </update>
+
+
+
+  <update id="deductStockWithCommodityId">
+    UPDATE online_shopping_commodity
+    set available_stock = available_stock - 1, lock_stock = lock_stock + 1
+    where commodity_id =  #{commodityId,jdbcType=BIGINT} and available_stock > 0
   </update>
 </mapper>
