@@ -21,8 +21,8 @@ public class OnlineShoppingCommodityDaoImpl implements OnlineShoppingCommodityDa
     }
 
     @Override
-    public OnlineShoppingCommodity ListCommodityByCommodityId(long commodityId) {
-        return onlineShoppingCommodityMapper.ListCommodityByCommodityId(commodityId);
+    public OnlineShoppingCommodity selectCommodityById(long commodityId) {
+        return onlineShoppingCommodityMapper.selectByPrimaryKey(commodityId);
     }
 
     @Override
@@ -31,8 +31,8 @@ public class OnlineShoppingCommodityDaoImpl implements OnlineShoppingCommodityDa
     }
 
     @Override
-    public List<OnlineShoppingCommodity> listCommoditiesBySellerId(Long sellerId) {
-        return onlineShoppingCommodityMapper.listCommoditiesBySellerId(sellerId);
+    public List<OnlineShoppingCommodity> listCommoditiesByUserId(Long userId) {
+        return onlineShoppingCommodityMapper.listCommoditiesByUserId(userId);
     }
 
     @Override
@@ -45,4 +45,14 @@ public class OnlineShoppingCommodityDaoImpl implements OnlineShoppingCommodityDa
         return onlineShoppingCommodityMapper.deductStockWithCommodityId(commodityId);
     }
 
+    @Override
+    public int revertStockWithCommodityId(long commodityId) {
+        return onlineShoppingCommodityMapper.revertStockWithCommodityId(commodityId);
+    }
+
+    @Override
+    public List<OnlineShoppingCommodity> searchCommodityByKeyword(String keyword) {
+        String keywordPattern = "%" + keyword + "%";
+        return onlineShoppingCommodityMapper.searchCommodityByKeyword(keywordPattern);
+    }
 }

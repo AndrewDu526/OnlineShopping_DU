@@ -99,8 +99,9 @@
 
 
     <div class="submit">
-        <a class="sui-btn btn-danger btn-xlarge" th:href="@{'/commodity/orderQuery/'+ ${orderNo}}"
-           target='_blank'>查看订单信息</a>
+        <a class="sui-btn btn-danger btn-xlarge"
+           th:href="@{/orders/{orderNo}(orderNo=${orderNo})}"
+           target="_blank">查看订单信息</a>
     </div>
 </div>
 <!-- 底部栏位 -->

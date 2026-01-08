@@ -251,14 +251,10 @@
 								</div>
 							</div>
 							<div class="fl">
-							<div class="fl">
 								<ul class="btn-choose unstyled">
 									<li>
-										<form th:action="@{/orders}" method="post" target="_blank">
-											<input type="hidden" name="userId" value="1"/>
-											<input type="hidden" name="commodityId" th:value="${commodity.commodityId}"/>
-											<button type="submit" class="addshopcar">立即购买</button>
-										</form>
+										<a th:href="'/commodity/buy/124/' + ${commodity.commodityId}" target="_blank"
+										   class="addshopcar">立即购买</a>
 									</li>
 								</ul>
 							</div>

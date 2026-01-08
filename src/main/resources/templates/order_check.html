@@ -86,7 +86,6 @@
 						<ul class="payType">
 							<li class="selected" @click="order.payType='1'">在线支付<span title="点击取消选择"></span></li>
 							<li @click="order.payType='0'">货到付款<span title="点击取消选择"></span></li>
-
 						</ul>
 					</div>
 					<div class="hr"></div>
@@ -130,7 +129,11 @@
 		<em th:switch="${order.orderStatus}">
 			<span th:case="1">
 				<div class="submit">
-					<a class="sui-btn btn-danger btn-xlarge" th:href="@{'/commodity/payOrder/' + ${order.orderNo}}">支付订单金额</a>
+					<form th:action="@{/orders/{orderNo}/pay(orderNo=${order.orderNo})}" method="post" style="display:inline;">
+  						<button type="submit" class="sui-btn btn-danger btn-xlarge">
+    						支付订单
+  						</button>
+					</form>
 				</div>
 			</span>
 		</em>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 
 <head>
 	<meta charset="utf-8" />
@@ -122,7 +122,7 @@
 				</div>
 				<div class="fr itemInfo-wrap">
 					<div class="sku-name">
-						<h4 th:text="${commodity.commodityName}"></h4>
+						<h4>小米14 Pro 智能手机</h4>
 					</div>
 					<div class="summary">
 						<div class="summary-wrap">
@@ -132,7 +132,7 @@
 							</div>
 							<div class="fl price">
 								<i>¥</i>
-								<em th:text="'￥'+${commodity.price}"></em>
+								<em>￥499900</em>
 								<span>降价通知</span>
 							</div>
 							<div class="fr remark">
@@ -145,7 +145,7 @@
 							</div>
 							<div class="fl price">
 								<i></i>
-								<em th:text="${commodity.availableStock}"></em>
+								<em>500</em>
 							</div>
 							<div class="fr remark">
 								<i></i><em></em>
@@ -251,14 +251,10 @@
 								</div>
 							</div>
 							<div class="fl">
-							<div class="fl">
 								<ul class="btn-choose unstyled">
 									<li>
-										<form th:action="@{/orders}" method="post" target="_blank">
-											<input type="hidden" name="userId" value="1"/>
-											<input type="hidden" name="commodityId" th:value="${commodity.commodityId}"/>
-											<button type="submit" class="addshopcar">立即购买</button>
-										</form>
+										<a href="/commodity/buy/124/1" target="_blank"
+										   class="addshopcar">立即购买</a>
 									</li>
 								</ul>
 							</div>
@@ -482,7 +478,7 @@
 						<div class="clearfix"></div>
 						<div class="tab-content tab-wraped">
 							<div id="one" class="tab-pane active">
-								<ul class="goods-intro unstyled" th:text="${commodity.commodityDesc}"></ul>
+								<ul class="goods-intro unstyled">骁龙8 Gen3处理器，徕卡光学镜头，120W澎湃秒充</ul>
 								<ul class="goods-intro unstyled">
 									<li>分辨率：1920*1080(FHD)</li>
 									<li>后置摄像头：1200万像素</li>

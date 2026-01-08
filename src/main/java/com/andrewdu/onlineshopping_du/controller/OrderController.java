@@ -5,56 +5,75 @@ import com.andrewdu.onlineshopping_du.db.po.OnlineShoppingCommodity;
 import com.andrewdu.onlineshopping_du.db.po.OnlineShoppingOrder;
 import com.andrewdu.onlineshopping_du.service.OrderService;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Map;
 
 @Controller
 public class OrderController {
-    @Resource
-    OrderService orderService;
 
     @Resource
-    OnlineShoppingCommodityDao onlineShoppingCommodityDao;
+    private OrderService orderService;
 
-    @RequestMapping("commodity/buy/{userId}/{commodityId}")
-    public String buyCommodity(@PathVariable("userId") long userId,
-                               @PathVariable("commodityId") long commodityId,
-                               Map<String, Object> resultMap) {
-        OnlineShoppingOrder order =
-//                orderService.placeOrderOriginal(commodityId, userId);
-//                orderService.placeOrderOneSQL(commodityId, userId);
-                  orderService.placeOrderRedis(commodityId, userId);
-//                orderService.placeOrderWithDistributedLock(commodityId, userId);
+    @Resource
+    private OnlineShoppingCommodityDao commodityDao;
+
+    /**
+     * 下单
+     * POST /orders
+     */
+    @PostMapping("/orders")
+    public String createOrder(
+            @RequestParam("userId") long userId,
+            @RequestParam("commodityId") long commodityId,
+            Map<String, Object> model
+    ) {
+        OnlineShoppingOrder order // = orderService.placeOrderRedis(commodityId, userId);
+                                     =  orderService.placeOrderFinal(commodityId, userId);
         if (order == null) {
-            resultMap.put("resultInfo", "Order create failed, check log for detail");
-            resultMap.put("orderNo", "");
+            model.put("resultInfo", "Order create failed, check log for detail");
+            model.put("orderNo", "");
         } else {
-            resultMap.put("resultInfo", "Order created successfully");
-            resultMap.put("orderNo", order.getOrderNo());
+            model.put("resultInfo", "Order created successfully");
+            model.put("orderNo", order.getOrderNo());
         }
         return "order_result";
     }
 
-    @RequestMapping("commodity/orderQuery/{orderNum}")
-    public String orderQuery(@PathVariable("orderNum") String orderNum,
-                               Map<String, Object> resultMap) {
-        OnlineShoppingOrder onlineShoppingOrder =
-                orderService.queryOrderByOrderNum(orderNum);
-        resultMap.put("order",  onlineShoppingOrder);
-        OnlineShoppingCommodity onlineShoppingCommodity =
-                onlineShoppingCommodityDao.ListCommodityByCommodityId(onlineShoppingOrder.getCommodityId());
-        resultMap.put("commodity",  onlineShoppingCommodity);
+    /**
+     * 查询订单详情
+     * GET /orders/{orderNo}
+     */
+    @GetMapping("/orders/{orderNo}")
+    public String getOrderDetail(
+            @PathVariable("orderNo") String orderNo,
+            Map<String, Object> model
+    ) {
+        OnlineShoppingOrder order = orderService.queryOrderByOrderNum(orderNo);
+        model.put("order", order);
+
+        if (order != null) {
+            OnlineShoppingCommodity commodity =
+                    commodityDao.selectCommodityById(order.getCommodityId());
+            model.put("commodity", commodity);
+        } else {
+            model.put("commodity", null);
+        }
+
         return "order_check";
     }
 
-    @RequestMapping("commodity/payOrder/{orderNum}")
-    public String payOrder(@PathVariable("orderNum") String orderNum,
-                             Map<String, Object> resultMap) {
-        orderService.payOrder(orderNum);
-        return orderQuery(orderNum, resultMap);
+    /**
+     * 支付订单
+     * POST /orders/{orderNo}/pay
+     */
+    @PostMapping("/orders/{orderNo}/pay")
+    public String payOrder(
+            @PathVariable("orderNo") String orderNo,
+            Map<String, Object> model
+    ) {
+        orderService.payOrder(orderNo);
+        return getOrderDetail(orderNo, model);
     }
 }
-
